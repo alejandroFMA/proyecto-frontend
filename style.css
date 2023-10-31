@@ -1,0 +1,21 @@
+*{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+body{
+    background-color: darkblue;
+
+}
+
+.resultCard{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    background-color: rgb(255, 255, 255); 
+}
+
+.resultCard>img{
+    width: 50%;
+}
