@@ -1,12 +1,14 @@
-console.log("hola");
-
-    const buscador = document.getElementById("buscador");
-    const buscadorInput = document.getElementById("buscador-input");
-    const results = document.getElementById("results");
 
 
+const buscador = document.getElementById("buscador");
+const buscadorInput = document.getElementById("buscador-input");
+const results = document.getElementById("results");
+const sortAZ = document.getElementById("sort-az");
+const sortRating = document.getElementById("sort-rating");
 
-    buscador.addEventListener("submit", async function (event) {
+
+
+buscador.addEventListener("submit", async function (event) {
         event.preventDefault();
         results.innerHTML = ""; 
 
@@ -33,7 +35,7 @@ console.log("hola");
                     <h2>${game.name}</h2>
                     <img src="${game.background_image}" alt="${game.name}">
                     <p>Genre:${genreNames.join(", ")}</p>
-                    <p>Rating: ${game.rating}</p>
+                    <p class="rate">Rating: ${game.rating}</p>
                     <p>Plataformas: ${platformNames.join(", ")}</p>
                 `;
                 results.appendChild(gameDiv);
@@ -42,4 +44,43 @@ console.log("hola");
             console.error("Error al buscar juegos:", error);
             results.innerHTML = "Error al buscar juegos.";
         }
+
+
+
+        
+});
+
+
+sortAZ.addEventListener("click", function () {
+
+    let gameCards = Array.from(document.querySelectorAll('.resultCard'));
+
+    gameCards.sort(function(a, b) {
+        let nameA = a.querySelector('h2').textContent; 
+        let nameB = b.querySelector('h2').textContent;
+        return nameA.localeCompare(nameB); 
     });
+
+    results.innerHTML = '';
+
+    gameCards.forEach(function(card) {
+        results.appendChild(card); 
+    });
+})
+
+
+sortRating.addEventListener("click", function() {
+
+    let gameCards = Array.from(results.getElementsByClassName('resultCard'));
+
+    gameCards.sort((a, b) => {
+        var ratingA = parseFloat(a.getElementsByClassName('rate')[0].innerText.split(' ')[1]);
+        var ratingB = parseFloat(b.getElementsByClassName('rate')[0].innerText.split(' ')[1]);
+        return ratingB - ratingA; 
+    });
+    
+    gameCards.forEach(card => results.appendChild(card));
+});
+
+
+
