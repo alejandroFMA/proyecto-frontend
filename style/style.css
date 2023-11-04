@@ -8,6 +8,17 @@ body{
 
 }
 
+
+
+select option[value] {
+    color: black;
+}
+
+.greyed, select option[value=""] {
+    color: grey;
+}
+
+
 #results{
     background-color: rgb(255, 255, 255);
     display: flex;

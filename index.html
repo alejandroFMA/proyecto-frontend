@@ -8,18 +8,32 @@
     <link rel="stylesheet" href="normalize.css">
 </head>
 <body>
-    <h1>Seek Games</h1>
-    <form id="buscador">
-        <input type="text" id="buscador-input" placeholder="Buscar juego">
-        <button type="submit">Search</button>
-        <button type=button id="sort-az">A-Z</button>
-        <button type=button id="sort-rating">Rating</button>
-    </form>
+        <header>
+            <nav>
+                <ul>
+                    <li>Search</li>
+                    <li>Lists</li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+        <h1>Seek Games</h1>
+        <form id="buscador">
+            <input type="text" id="buscador-input" placeholder="Buscar juego">
+            <button type="submit">Search</button>
+            <label for="filters">Sort results by</label>
+            <select id="filters" name="filters">
+                <option class="greyed" value="">Default</option>   
+                <option value="az">A-Z</option>
+                <option value="rating">Rating</option>
+            </select>
+        </form>
 
-    <div id="results"></div>
+        <div id="results"></div>
 
-    <button id="prev">Preview</button>
-    <button id="next">Next</button>
+        <button id="prev">Preview</button>
+        <button id="next">Next</button>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
