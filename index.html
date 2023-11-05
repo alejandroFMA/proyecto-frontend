@@ -17,24 +17,43 @@
         </header>
         <main>
             <section id="searchBox">
-            
-            <form id="searcher">
-                <input type="text" id="searcher-input" placeholder="Look for a game" required>
-                <button type="submit">Search</button>
-                <label for="filters">Sort results by</label>
-                <select id="filters" name="filters">
-                    <option class="greyed" value="">Default</option>   
-                    <option value="az">A-Z</option>
-                    <option value="rating">Rating</option>
-                </select>
-            </form>
+
+                <div id="buscadores">
+                    <form id="searcher">
+                        <input type="text" id="searcher-input" placeholder="Look for a game" required>
+                        <button type="submit">Search</button>
+                        <label for="filters">Sort results by</label>
+                        <select id="filters" name="filters">
+                            <option class="greyed" value="">Default</option>   
+                            <option value="az">A-Z</option>
+                            <option value="rating">Rating</option>
+                        </select>
+                    </form>
+               
+
+                    <h5>Advance search</h5>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle">
+                      <span class="slider round"></span>
+                    </label>
+
+                    <form id="advanceSearch">
+                        <label for="searcher-genres"> Search for genres</label>
+                        <input type="text" id="searcher-genres" placeholder="Genres">
+                        <label for="searcher-date"> Search for date</label>
+                        <input type="text" id="searcher-genres" placeholder="Date">
+                        <label for="searcher-platform"> Search for platform</label>
+                        <input type="text" id="searcher-genres" placeholder="Platform">
+                    </form>
+
+                 </div>
+
             <div id="gameDetail" class="game-detail-container" style="display: none;"></div>
             <div id="results"></div>
-            <button id="prev">Preview</button>
-            <button id="next">Next</button>
     </section>
 
-    <section id="randomBox">    
+    <section id="randomBox">
+
         <h2>Get a random game for free!</h2>
         <button type="submit" id="lucky">I'm feeling lucky</button>
 

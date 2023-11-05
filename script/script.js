@@ -2,6 +2,7 @@
 
 const searcher = document.getElementById("searcher");
 const searcherInput = document.getElementById("searcher-input");
+const toggleAdvance = document.getElementById("toggle")
 const results = document.getElementById("results");
 const sortFilter = document.getElementById("filters"); 
 const randGame= document.getElementById("lucky");
@@ -53,9 +54,6 @@ searcher.addEventListener("submit", async function (event) {
   }
 });
 
-
-
-
 sortFilter.addEventListener('change', function(event) {
     const option = event.target.value;
     let gameCards = Array.from(document.querySelectorAll('.resultCard'));
@@ -103,10 +101,10 @@ sortFilter.addEventListener('change', function(event) {
         gameDetailContainer.innerHTML = `
             <div class="game-detail">
                 <h1>${game.name}</h1>
-                <img src="${game.background_image}" alt="${game.name}" />
-                <p>${game.description_raw}</p>
-                <p>${game.metacritic}</p> 
+                <img src="${game.background_image}" alt="${game.name}" />      
+                <p>Metacritic:${game.metacritic}</p> 
                 <p>${game.released}</p>
+                <p>${game.description_raw}</p>
                 </div>`;
 
        
@@ -122,6 +120,18 @@ sortFilter.addEventListener('change', function(event) {
 document.getElementById('gameDetail').addEventListener('click', function() {
   this.style.display = 'none';
 })
+///// ADVANCED SEARCH///
+
+toggleAdvance.addEventListener('click', function(){
+
+
+  if (document.getElementById('advanceSearch').style.display === 'none') {
+    document.getElementById('advanceSearch').style.display = 'block';
+  } else {
+    document.getElementById('advanceSearch').style.display = 'none';
+  }
+})
+
 
 
 ////RANDOM GAME CARD/////
@@ -160,26 +170,38 @@ document.getElementById('gameDetail').addEventListener('click', function() {
           const response = await fetch(api);
           const game = await response.json();
 
-          const genreNames = game.genres.map((genre) => genre.name);
-         const platformNames = game.platforms.map((plat) => plat.platform.name);
+          const genreNames = game.genres.map((genre) => genre.name); // mismo procedimiento que en searcher
+          const platformNames = game.platforms.map((plat) => plat.platform.name);
           
+          const gameDiv = document.createElement("div"); 
+          gameDiv.classList.add('resultCard');
+          gameDiv.setAttribute("data-game-id", game.id)
       
-          const gameCardHtml = `
+          gameDiv.innerHTML = `
             <div class="resultCard">
               <img src="${game.background_image}" alt="${game.name}">
               <h2>${game.name}</h2>
-              <p>Genre:${genreNames.join(", ")}</p>
+             <p>Genre:${genreNames.join(", ")}</p>
               <p class="rate">Rating: ${game.rating}</p>
               <p>Plataformas: ${platformNames.join(", ")}</p>
             </div>
           `;
-          document.getElementById('lucky-container').innerHTML = gameCardHtml;
+          document.getElementById('lucky-container').innerHTML = gameDiv;
+
+          gameDiv.addEventListener('click', function() {
+            showGameDetails(this);
+          });
+      
+          const luckyContainer = document.getElementById('lucky-container');
+          luckyContainer.innerHTML = ''; 
+          luckyContainer.appendChild(gameDiv);
           
         } catch (error) {
           console.error("Error al obtener los detalles del juego:", error);
         }
       }
     };
+
     
   randGame.addEventListener("click", function () {
 
