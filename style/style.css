@@ -1,7 +1,8 @@
-*{
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Fira+Sans&family=PT+Sans&family=Sofia+Sans+Condensed&family=Space+Mono&family=Young+Serif&display=swap');
 
+*{
+    font-family: 'Concert One', sans-serif;
+}
 
 body{
     background-color: rgb(98, 98, 234);
@@ -14,6 +15,17 @@ header{
     align-items: center;
 
 }
+
+header>a{
+   text-decoration: none;
+   color: white;
+
+}
+
+header>a:hover{
+    color: white;
+ 
+ }
 
 
 select option[value] {
@@ -66,11 +78,20 @@ select option[value] {
     background-color: rgb(255, 255, 255);
     border-radius: 5%;
     padding: 10px;
-    margin: 10px; 
+    margin: 20px; 
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+   
 
 }
+
+.resultCard:hover{
+
+    box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
+}
+
+
+
+
 
 .resultCard>img{
     width: 500px;
