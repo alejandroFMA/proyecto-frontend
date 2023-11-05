@@ -9,30 +9,43 @@
 </head>
 <body>
         <header>
+            <h1>Seek Games</h1>
             <nav>
-                <ul>
-                    <li>Search</li>
-                    <li>Lists</li>
-                </ul>
+                    <a href="./index.html">Search</a>
+                    <a href="./lists.html">Lists</a>             
             </nav>
         </header>
         <main>
-        <h1>Seek Games</h1>
-        <form id="buscador">
-            <input type="text" id="buscador-input" placeholder="Buscar juego">
-            <button type="submit">Search</button>
-            <label for="filters">Sort results by</label>
-            <select id="filters" name="filters">
-                <option class="greyed" value="">Default</option>   
-                <option value="az">A-Z</option>
-                <option value="rating">Rating</option>
-            </select>
-        </form>
+            <section id="searchBox">
+            
+            <form id="searcher">
+                <input type="text" id="searcher-input" placeholder="Look for a game" required>
+                <button type="submit">Search</button>
+                <label for="filters">Sort results by</label>
+                <select id="filters" name="filters">
+                    <option class="greyed" value="">Default</option>   
+                    <option value="az">A-Z</option>
+                    <option value="rating">Rating</option>
+                </select>
+            </form>
+            <div id="gameDetail" class="game-detail-container" style="display: none;"></div>
+            <div id="results"></div>
+            <button id="prev">Preview</button>
+            <button id="next">Next</button>
+    </section>
 
-        <div id="results"></div>
+    <section id="randomBox">    
+        <h2>Get a random game for free!</h2>
+        <button type="submit" id="lucky">I'm feeling lucky</button>
 
-        <button id="prev">Preview</button>
-        <button id="next">Next</button>
+        <article id="lucky-container">
+
+        </article>
+       
+
+    </section>
+
+        
     </main>
     <script src="./script/script.js"></script>
 </body>

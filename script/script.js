@@ -1,53 +1,59 @@
 
 
-const buscador = document.getElementById("buscador");
-const buscadorInput = document.getElementById("buscador-input");
+const searcher = document.getElementById("searcher");
+const searcherInput = document.getElementById("searcher-input");
 const results = document.getElementById("results");
 const sortFilter = document.getElementById("filters"); 
+const randGame= document.getElementById("lucky");
 
 
+///BUSCADORES Y FILTRO///
 
-buscador.addEventListener("submit", async function (event) {
-        event.preventDefault();
-        results.innerHTML = ""; 
+searcher.addEventListener("submit", async function (event) {
+  event.preventDefault();
+  results.innerHTML = ""; 
 
-        const palabraJuego = buscadorInput.value;
-        const api = `https://api.rawg.io/api/games?key=41e09f82e07341ceac29f5fc9cb6f367&search=${palabraJuego}`;
+  const wordGame = searcherInput.value;
 
-        try {
-            const response = await fetch(api);
-            const data = await response.json();
+  const api = `https://api.rawg.io/api/games?key=41e09f82e07341ceac29f5fc9cb6f367&search=${wordGame}`;
 
-            if (data.results.length === 0) {
-                results.innerHTML = "No hay resultados";
-                return;
-            }
-            
-            data.results.forEach((game) => {
-                const gameDiv = document.createElement("div");
-                gameDiv.classList.add('resultCard');
+  try {
+    const response = await fetch(api);
+    const data = await response.json();
 
-                const genreNames = game.genres.map((genre) => genre.name);
-                const platformNames = game.platforms.map((plat) => plat.platform.name);
+    if (data.results.length === 0) {
+      results.innerHTML = `<img class="notfound" src="./assets/84wwhr.jpg" alt="game not found">`;
+      return;
+    }
+    
+    data.results.forEach((game) => {
+      const gameDiv = document.createElement("div");
+      gameDiv.classList.add('resultCard');
+      gameDiv.setAttribute("data-game-id", game.id);
 
-                gameDiv.innerHTML = `
-                    <h2>${game.name}</h2>
-                    <img src="${game.background_image}" alt="${game.name}">
-                    <p>Genre:${genreNames.join(", ")}</p>
-                    <p class="rate">Rating: ${game.rating}</p>
-                    <p>Plataformas: ${platformNames.join(", ")}</p>
-                `;
-                results.appendChild(gameDiv);
-            });
-        } catch (error) {
-            console.error("Error al buscar juegos:", error);
-            results.innerHTML = "Error al buscar juegos.";
-        }
+      const genreNames = game.genres.map((genre) => genre.name);
+      const platformNames = game.platforms.map((plat) => plat.platform.name);
 
+      gameDiv.innerHTML = `
+        <h2>${game.name}</h2>
+        <img src="${game.background_image}" alt="${game.name}">
+        <p>Genre: ${genreNames.join(", ")}</p>
+        <p class="rate">Rating: ${game.rating}</p>
+        <p>Platforms: ${platformNames.join(", ")}</p>
+      `;
+      results.appendChild(gameDiv);
 
-
-        
+      gameDiv.addEventListener('click', function() {
+        showGameDetails(this);
+      });
+    });
+  } catch (error) {
+    console.error("Error fetching games:", error);
+    results.innerHTML = "Error fetching games.";
+  }
 });
+
+
 
 
 sortFilter.addEventListener('change', function(event) {
@@ -73,62 +79,110 @@ sortFilter.addEventListener('change', function(event) {
     }
   
 
-  document.getElementById('results').resultsContainer.innerHTML = ''; //para limpiar results
+  document.getElementById('results').innerHTML = ''; //para limpiar results
     
     gameCards.forEach(function(card) {
-      resultsContainer.appendChild(card);
+      document.getElementById('results').appendChild(card);
     });
   });
 
 
-  function randomidD()
-  {
-
-    
-
-
-  }
-
-
-
-
-  async function randomGame(){
-
-
-      const api = `https://api.rawg.io/api/games/${id}6?key=41e09f82e07341ceac29f5fc9cb6f367`;
-
-
-    
-
+  async function showGameDetails(gameCardElement) {
+    const gameId = gameCardElement.getAttribute('data-game-id'); // extrae la id del juego
     try {
+        const api = `https://api.rawg.io/api/games/${gameId}?key=41e09f82e07341ceac29f5fc9cb6f367`;
+        const response = await fetch(api);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const game = await response.json();
+        const gameDetailContainer = document.getElementById('gameDetail');
+        
+        gameDetailContainer.innerHTML = `
+            <div class="game-detail">
+                <h1>${game.name}</h1>
+                <img src="${game.background_image}" alt="${game.name}" />
+                <p>${game.description_raw}</p>
+                <p>${game.metacritic}</p> 
+                <p>${game.released}</p>
+                </div>`;
+
+       
+        gameDetailContainer.style.display = 'block';
+
+    } catch (error) {
+        console.error("Error fetching details for game ID:", gameId, error);
+     
+    }
+}
+
+
+document.getElementById('gameDetail').addEventListener('click', function() {
+  this.style.display = 'none';
+})
+
+
+////RANDOM GAME CARD/////
+  
+    async function totalGames(){
+
+      const api = `https://api.rawg.io/api/games?key=41e09f82e07341ceac29f5fc9cb6f367`;
+
       const response = await fetch(api);
       const data = await response.json();
 
-      if (data.results.length === 0) {
-          results.innerHTML = "No hay resultados";
-          return;
-      }
+      const countGames = data.count;
       
-      data.results.forEach((game) => {
-          const gameDiv = document.createElement("div");
-          gameDiv.classList.add('resultCard');
+    return countGames
+    }
+
+    async function getRandomGame() {
+      try {
+        const total = await totalGames();
+        const randomId = Math.floor(Math.random() * total) + 1; // "+ 1" porque el ID no debería ser 0.
+        return randomId;
+      } catch (error) {
+        console.error("Error al obtener el ID del juego aleatorio:", error);
+        return null;
+      }
+    }
+
+    async function displayRandom() {
+
+      const randomId = await getRandomGame();
+      
+      if (randomId) {
+        const api = `https://api.rawg.io/api/games/${randomId}?key=41e09f82e07341ceac29f5fc9cb6f367`;
+        
+        try {
+          const response = await fetch(api);
+          const game = await response.json();
 
           const genreNames = game.genres.map((genre) => genre.name);
-          const platformNames = game.platforms.map((plat) => plat.platform.name);
-
-          gameDiv.innerHTML = `
-              <h2>${game.name}</h2>
+         const platformNames = game.platforms.map((plat) => plat.platform.name);
+          
+      
+          const gameCardHtml = `
+            <div class="resultCard">
               <img src="${game.background_image}" alt="${game.name}">
+              <h2>${game.name}</h2>
               <p>Genre:${genreNames.join(", ")}</p>
               <p class="rate">Rating: ${game.rating}</p>
               <p>Plataformas: ${platformNames.join(", ")}</p>
+            </div>
           `;
-          results.appendChild(gameDiv);
-      });
-  } catch (error) {
-      console.error("Error al buscar juegos:", error);
-      results.innerHTML = "Error al buscar juegos.";
-  }
+          document.getElementById('lucky-container').innerHTML = gameCardHtml;
+          
+        } catch (error) {
+          console.error("Error al obtener los detalles del juego:", error);
+        }
+      }
+    };
+    
+  randGame.addEventListener("click", function () {
 
-
-  }
+    displayRandom()
+  
+  });
