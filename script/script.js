@@ -87,27 +87,29 @@ sortFilter.addEventListener('change', function(event) {
 
 
 
-  async function showGameDetails(gameCardElement) {
-    const gameId = gameCardElement.getAttribute('data-game-id'); // extrae la id del juego
+  async function showGameDetails(gameElement) {
+    const gameId = typeof gameElement === 'number' ? gameElement : gameElement.getAttribute('data-game-id');; // extrae la id del juego
     try {
         const api = `https://api.rawg.io/api/games/${gameId}?key=41e09f82e07341ceac29f5fc9cb6f367`;
-        const response = await fetch(api);
         
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const game = await response.json();
+        const response = await fetch(api);
+        const gameDetails = await response.json();
         const gameDetailContainer = document.getElementById('gameDetail');
+        const genreNames = gameDetails.genres.map((genre) => genre.name);
+        const platformNames = gameDetails.platforms.map((plat) => plat.platform.name);
         
         gameDetailContainer.innerHTML = `
             <div class="game-detail">
             <span id="closeDetail" style="cursor: pointer;">&times; Close</span>
-                <h1>${game.name}</h1>
-                <img src="${game.background_image}" alt="${game.name}" />      
-                <p>Metacritic:${game.metacritic}</p> 
-                <p>${game.released}</p>
-                <p>${game.description_raw}</p>
+                <h1>${gameDetails.name}</h1>
+                <img src="${gameDetails.background_image}" alt="${gameDetails.name}" />  
+                <p>Genres: ${genreNames}</p>
+                <p>Platforms: ${platformNames}</p>    
+                <p>Metacritic: ${gameDetails.metacritic}</p> 
+                <p>Released: ${gameDetails.released}</p>
+                <p>${gameDetails.description_raw}</p>
+                <p>Genres: ${genreNames}</p>
+                <p>Platforms: ${platformNames}</p>
                 </div>`;
 
        
@@ -160,7 +162,7 @@ toggleAdvance.addEventListener('click', function(){
         return randomId;
       } catch (error) {
         console.error("Error al obtener el ID del juego aleatorio:", error);
-        return null;
+        return "Not found";
       }
     }
 
@@ -242,7 +244,15 @@ toggleAdvance.addEventListener('click', function(){
     
         for (let i = 0; i < games.length; i++) {
           const item = document.createElement('li');
-          item.textContent = `${games[i].name} (Score: ${games[i].metacritic})`;
+          const gameLink = document.createElement('a');
+          gameLink.textContent = `${games[i].name} (Score: ${games[i].metacritic})`;
+          gameLink.href = '#'; 
+          gameLink.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            showGameDetails(games[i].id); 
+          });
+    
+          item.appendChild(gameLink);
           list.appendChild(item);
         }
     
@@ -280,7 +290,15 @@ toggleAdvance.addEventListener('click', function(){
     
         for (let i = 0; i < games.length; i++) {
           const item = document.createElement('li');
-          item.textContent = `${games[i].name} (To be released: ${games[i].released})`;
+          const gameLink = document.createElement('a');
+          gameLink.textContent = `${games[i].name} (To be released: ${games[i].released})`;
+          gameLink.href = '#'; 
+          gameLink.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            showGameDetails(games[i].id); o
+          });
+    
+          item.appendChild(gameLink);
           list.appendChild(item);
         }
     
@@ -299,3 +317,71 @@ toggleAdvance.addEventListener('click', function(){
     // gameDiv.addEventListener('click', function() {
       // showGameDetails(this);
     // });
+
+
+    ///////RECOMENDATION///////
+
+
+async function loadOptions() {
+  const genresSelect = document.getElementById('genres-select');
+  const platformsSelect = document.getElementById('platforms-select');
+  
+  try {
+    const genresResponse = await fetch('https://api.rawg.io/api/genres?key=41e09f82e07341ceac29f5fc9cb6f367');
+    const genresData = await genresResponse.json();
+    genresData.results.forEach(genre => {
+      genresSelect.add(new Option(genre.name, genre.id));
+    });
+
+    const platformsResponse = await fetch('https://api.rawg.io/api/platforms?key=41e09f82e07341ceac29f5fc9cb6f367');
+    const platformsData = await platformsResponse.json();
+    platformsData.results.slice(0, 28).forEach(platform => {
+      platformsSelect.add(new Option(platform.name, platform.id));
+    });
+  } catch (error) {
+    console.error("Error al cargar opciones:", error);
+  }
+}
+
+async function submitOptions(event) {
+  event.preventDefault();
+
+  const genresSelect = document.getElementById('genres-select');
+  const platformsSelect = document.getElementById('platforms-select');
+  const selectedGenres = Array.from(genresSelect.selectedOptions).map(option => option.value).join(',');
+  const selectedPlatforms = Array.from(platformsSelect.selectedOptions).map(option => option.value).join(',');
+  const recomendContainer = document.getElementById('recomendContainer');
+
+  recomendContainer.innerHTML = ''; 
+
+ 
+  const gamesApi = `https://api.rawg.io/api/games?genres=${selectedGenres}&platforms=${selectedPlatforms}&key=41e09f82e07341ceac29f5fc9cb6f367`;
+  try {
+    const response = await fetch(gamesApi);
+    const data = await response.json();
+    
+    data.results.forEach(game => {
+      const gameDiv = document.createElement('div');
+      gameDiv.className = 'game'; 
+      gameDiv.setAttribute('data-game-id', game.id); 
+  
+      
+      const gameTitle = document.createElement('a');
+      gameTitle.href = '#'; 
+      gameTitle.textContent = game.name;
+      gameTitle.addEventListener('click', function(event) {
+        event.preventDefault(); 
+        showGameDetails(gameDiv); 
+      });
+  
+      gameDiv.appendChild(gameTitle);
+      recomendContainer.appendChild(gameDiv);
+    });
+  } catch (error) {
+    console.error("Error al obtener recomendaciones:", error);
+  }
+
+}
+
+document.addEventListener('DOMContentLoaded', loadOptions);
+document.getElementById('gamesForm').addEventListener('submit', submitOptions);

@@ -2,6 +2,7 @@
 
 *{
     font-family: 'Concert One', sans-serif;
+    font-size: 28px;
 }
 
 body{
@@ -16,7 +17,7 @@ header{
 
 }
 
-header>a{
+a{
    text-decoration: none;
    color: white;
 
@@ -30,6 +31,12 @@ header>a:hover{
 
 select option[value] {
     color: black;
+}
+
+section{
+
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .greyed, select option[value=""] {
@@ -89,10 +96,6 @@ select option[value] {
     box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
 }
 
-
-
-
-
 .resultCard>img{
     width: 500px;
     
@@ -123,11 +126,9 @@ select option[value] {
 
 }
 .game-detail>img{
-width: 60%;
-
+  width: 60%;
 
 }
-
 
 .notfound{
 
@@ -139,7 +140,6 @@ width: 60%;
     display: none
 
 }
-
 
 .switch {
     position: relative;
@@ -192,11 +192,112 @@ width: 60%;
     transform: translateX(26px);
   }
   
-  /* Rounded sliders */
+  
   .slider.round {
     border-radius: 34px;
   }
   
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  select{
+
+    width: 100%;
+    text-align: center;
+  }
+
+  .select:not(.select--multiple)::after
+  select[multiple] {
+    padding-right: 0;
+    
+  }
+  select[multiple] option {
+    white-space: normal;
+   
+  }
+  select[multiple] {
+    height: 6rem;
+  
+  }
+
+  select[multiple] option:checked {
+    background-color: rgba(240, 46, 170, 0.4);;
+  }
+  select[multiple]::selection {
+    background: rgba(240, 46, 170, 0.4);
+    color: #000000;
+
+  }
+
+select[multiple]::-webkit-selection {
+  background: rgba(240, 46, 170, 0.4);
+  color: #000000;
+}
+
+  #gamesform{
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  #recomendContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+
+    
+  }
+
+  #recomendContainer>div>div{
+
+  background-color: white;  
+
+  }
+
+  #recomendContainer>div>a{
+    color:black;
+   
+    border-radius: 5px ;
+    
+
+  }
+
+
+  #recomendContainer>div:hover{
+   
+    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+
+  }
+
+  #listcontainer{
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center
+  }
+
+  
+  li{
+
+    margin: 20px;
+    background-color: white;
+    border-radius: 5px ;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center
+  }
+  
+
+  li:hover{
+
+    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+  }
+
+  li>a{
+
+    color:black
   }
