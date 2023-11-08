@@ -24,13 +24,14 @@ SeekGames is an interactive portal for video game enthusiasts looking to discove
 
 To get the project up and running on your local machine, follow these steps:
 
-1. Clone the repository to your local machine (git clone h(https://github.com/alejandroFM(proyecto-frontend)
+1. Clone the repository to your local machine git clone - https://github.com/alejandroFM/proyecto-frontend
 
 2. Open the `index.html` file in your web browser to view the website.
 
 ## Future Implementations
 
  **Favorite Lists Management:** Users will be able to create and manage their own lists of favorite games, allowing for quick access and personalized game libraries.
+ 
 **Advanced Search:** An advanced search feature will be implemented to filter games by multiple criteria such as publisher, developer, release date range, game mechanics, and user ratings.
 
 
