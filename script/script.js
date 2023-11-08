@@ -1,4 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+/*import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 import {
   getAuth,
   signInWithPopup,
@@ -54,7 +54,7 @@ async function signOutUser() {
 
 let signInButton= document.getElementById("sign-in-button")
 signInButton.addEventListener('click', signInWithGoogle);
-
+*/
 
 //////////////////DOM/////////////////
 
@@ -75,18 +75,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const randomButton = document.getElementById('random-button');
   const listsButton = document.getElementById('lists-button');
 
-
-  const searcherSection = document.getElementById('searcher');
-  const recommendationsSection = document.getElementById('recommendations');
-  const randomBoxSection = document.getElementById('randomBox');
-  const listsContainerSection = document.getElementById('list-container');
-
-  const showSection = (sectionToShow) => {
-    searcherSection.style.display = sectionToShow === 'searcher' ? 'flex' : 'none';
-    recommendationsSection.style.display = sectionToShow === 'recommendations' ? 'flex' : 'none';
-    randomBoxSection.style.display = sectionToShow === 'randomBox' ? 'flex' : 'none';
-    listsContainerSection.style.display = sectionToShow === 'list-container' ? 'flex' : 'none';
+  const sections = {
+      'searcher': document.getElementById('searcher'),
+      'recommendations': document.getElementById('recommendations'),
+      'randomBox': document.getElementById('randomBox'),
+      'list-container': document.getElementById('list-container')
   };
+  
+    const toggleSection = (sectionId) => {
+      Object.entries(sections).forEach(([id, section]) => {
+        if (id === sectionId) {
+    
+          section.style.display = section.style.display === 'flex' ? 'none' : 'flex';
+        } else {
+         
+          section.style.display = 'none';
+        }
+      });
+    };
+
+    searchButton.addEventListener('click', () => toggleSection('searcher'));
+    recommendationsButton.addEventListener('click', () => toggleSection('recommendations'));
+    randomButton.addEventListener('click', () => toggleSection('randomBox'));
+    listsButton.addEventListener('click', () => toggleSection('list-container'));
+
 
   
   if (searchButton) {
@@ -117,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', cleanResults);
   });
 });
-
 
 
 ///BUSCADORES Y FILTRO///

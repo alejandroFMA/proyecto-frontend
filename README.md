@@ -2,6 +2,8 @@
 
 SeekGames is an interactive portal for video game enthusiasts looking to discover new games, get recommendations, and browse lists of top-rated games by category.
 
+![Imagen](/assets/Captura%20de%20pantalla%202023-11-08%20023825.png alt="captura de pantalla")
+
 ## Features
 
 - **Game Search:** Find specific games using the search box.

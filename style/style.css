@@ -33,7 +33,12 @@ nav{
 
   display: flex;
   flex-direction: column;
-  display: none;
+  
+}
+
+nav>button{
+
+  margin: 10px;
 }
 
 header>button{
@@ -58,12 +63,6 @@ header>button:hover{
 }
 
 
-#web{
-
-  display: none;
-
-
-}
 
 select option[value] {
     color: black;
@@ -128,7 +127,7 @@ section{
 }
 
 #randomBox{
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -269,10 +268,11 @@ select[multiple]::-webkit-selection {
 
   }
 
-#recommendation{
+#recommendations{
 
-  display: flex;
+  display: none;
   flex-direction: column;
+  
 }
 
 #gamesForm{
@@ -328,7 +328,7 @@ select[multiple]::-webkit-selection {
   }
 
 #list-container{
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: stretch;
   text-align: center
@@ -339,23 +339,24 @@ select[multiple]::-webkit-selection {
   li{
 
     margin: 20px;
-    background-color: white;
     border-radius: 5px ;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    text-align: center
+    text-align: center;
+    
   }
   
 
-  li:hover{
+  li>a:hover{
 
     box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
   }
 
   li>a{
 
-    color:black
+    color:black;
+    text-decoration: none;
   }
 
   #metacritic{
@@ -483,9 +484,14 @@ select[multiple]::-webkit-selection {
 
   @media only screen and (min-width: 768px) and (max-width: 1024px) {
     header{
-      flex-direction: row;
+      flex-direction: column;
+      flex-wrap: wrap;
     }
 
+    nav{
+
+      flex-direction: row;
+    }
    #searcher{
     display: flex;
     flex-direction: row;
@@ -506,7 +512,7 @@ select[multiple]::-webkit-selection {
     }
   
     #list-container{
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       text-align: center
@@ -515,6 +521,10 @@ select[multiple]::-webkit-selection {
     #filters{
 
       width: 30%;
+    }
+
+    #recommendations{
+      flex-direction: column;
     }
 
     
@@ -526,6 +536,7 @@ select[multiple]::-webkit-selection {
       justify-content: space-around;
     }
     nav{
+      display: flex;
       flex-direction: row;
       justify-content: space-around;
     }
@@ -563,4 +574,7 @@ select[multiple]::-webkit-selection {
       width: 25%;
     }
    
+   
+
+
   }
