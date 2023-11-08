@@ -31,7 +31,7 @@ Copy code
 ## Future Implementations
 
  **Favorite Lists Management:** Users will be able to create and manage their own lists of favorite games, allowing for quick access and personalized game libraries.
-- **Advanced Search:** An advanced search feature will be implemented to filter games by multiple criteria such as publisher, developer, release date range, game mechanics, and user ratings.
+**Advanced Search:** An advanced search feature will be implemented to filter games by multiple criteria such as publisher, developer, release date range, game mechanics, and user ratings.
 
 
 ## Contributing
