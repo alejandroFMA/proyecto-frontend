@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="D3bjafzeMlsyXrrOilptq1ho1Y8nrzoSATgycAQ1BKA" />
+    <link rel="shortcut icon" href="./assets/gamepad-icon-512x512-36omn5n1.png" type="image/x-icon">
+    <title>SeekGames</title>
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="./style/normalize.css">
+</head>
+<body>
+        <header>
+            <div class="titulo"><img src="./assets/mando.png" alt="logo controller">
+                <h1>SeekGames</h1></div>
+          <!-----  
+            <section id="login">
+                <button  id="sign-in-button" class="gsi-material-button">Sign in with Google </button>
+            -->
+            </section>
+            <nav>
+                <button type="button" id="search-button">Search</button>
+                <button type="button"id="recommendations-button">Recommendations</button>
+                <button type="button" id="random-button">Random</button>
+                <button type="button"id="lists-button">Lists</button>                     
+            </nav>
+        </header>
+        <main>
+
+            
+            <section id="web">
+            <section id="searchBox">
+
+                <div id="buscadores">
+                    <form id="searcher">
+                        <input type="text" id="searcher-input" placeholder="Look for a game" required>
+                        <button type="submit">Search</button>
+                        <button class ="clean" type="button">Clean</button>
+                        <label for="filters">Sort results by</label>
+                        <select id="filters" name="filters">
+                            <option class="greyed" value="">Default</option>   
+                            <option value="az">A-Z</option>
+                            <option value="rating">Rating</option>
+                            <option value="metacritic">Metacritic</option>
+                            <option value="date">Date</option>
+                                      
+                        </select>
+                    </form>
+                 </div>
+
+            <div id="gameDetail" class="game-detail-container" style="display: none;">
+            </div>
+            <div id="results"></div>
+        </section>
+
+        <section id="randomBox">
+
+            
+
+            <h2>Get a random game for free!</h2>
+            <button type="submit" id="lucky">I'm feeling lucky</button>
+            <article id="lucky-container"></article>
+
+           
+         
+        </section>
+
+        <section id="recommendations">
+
+            <form id="gamesForm">
+                <label for="genres-select">Choose genres:</label>
+                <select id="genres-select" multiple>
+                    
+                </select>
+              
+                <label for="platforms-select">Choose platforms:</label>
+                <select id="platforms-select" multiple>
+                
+                  
+                </select>
+                <button type="submit">Check recommendations!</button>
+                <button class="clean" type="button">Clean</button>
+              </form>
+              
+            <div id="recomendContainer"></div>
+        </section>
+
+
+    <section id="list-container">
+        <button type=button id="list-meta"> TOP 10 BEST REVIEWED GAMES FROM 2023 BY METACRITIC</button>
+        <article id="meta-list"></article>
+        <button type= button id="list-ordered"> TOP 10 MOST ANTICIPATED GAMES</button>
+        <article id="ordered-list"></article>
+        <button class ="clean" type="button">Clean</button>
+    
+        </form>
+
+    </section>
+
+</section>  
+    </main>
+    <script src="/script/script.js" type="module"></script>
+</body>
+</html>
