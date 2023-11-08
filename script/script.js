@@ -1,13 +1,124 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
 
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8PBdq1A0OUIiTv21LLy3PZQwdXyPUQHA",
+  authDomain: "seekgames-7a0ff.firebaseapp.com",
+  projectId: "seekgames-7a0ff",
+  storageBucket: "seekgames-7a0ff.appspot.com",
+  messagingSenderId: "481965726377",
+  appId: "1:481965726377:web:a82fb89c9cdd9ad23427b8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+
+async function signInWithGoogle() {
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    document.getElementById('user-name').textContent = user.displayName;
+    document.getElementById("searchbox").style.display="block"
+    document.querySelector('nav').style.display = 'flex';
+   
+   
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    const email = error.email;
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.error("Error signing in with Google: ", errorCode, errorMessage);
+    
+  }
+}
+
+
+async function signOutUser() {
+  try {
+    await signOut(auth);
+    document.getElementById('user-name').textContent = '';
+    
+  } catch (error) {
+    
+    console.error("Error signing out: ", error);
+  }
+}
+
+let signInButton= document.getElementById("sign-in-button")
+signInButton.addEventListener('click', signInWithGoogle);
+
+
+//////////////////DOM/////////////////
 
 const searcher = document.getElementById("searcher");
 const searcherInput = document.getElementById("searcher-input");
-const toggleAdvance = document.getElementById("toggle")
 const results = document.getElementById("results");
 const sortFilter = document.getElementById("filters"); 
 const randGame = document.getElementById("lucky");
 const listMeta = document.getElementById("list-meta")
 const listAnticipated = document.getElementById("list-ordered")
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  const searchButton = document.getElementById('search-button');
+  const recommendationsButton = document.getElementById('recommendations-button');
+  const randomButton = document.getElementById('random-button');
+  const listsButton = document.getElementById('lists-button');
+
+
+  const searcherSection = document.getElementById('searcher');
+  const recommendationsSection = document.getElementById('recommendations');
+  const randomBoxSection = document.getElementById('randomBox');
+  const listsContainerSection = document.getElementById('list-container');
+
+  const showSection = (sectionToShow) => {
+    searcherSection.style.display = sectionToShow === 'searcher' ? 'flex' : 'none';
+    recommendationsSection.style.display = sectionToShow === 'recommendations' ? 'flex' : 'none';
+    randomBoxSection.style.display = sectionToShow === 'randomBox' ? 'flex' : 'none';
+    listsContainerSection.style.display = sectionToShow === 'list-container' ? 'flex' : 'none';
+  };
+
+  
+  if (searchButton) {
+    searchButton.addEventListener('click', () => showSection('searcher'));
+  }
+  if (recommendationsButton) {
+    recommendationsButton.addEventListener('click', () => showSection('recommendations'));
+  }
+  if (randomButton) {
+    randomButton.addEventListener('click', () => showSection('randomBox'));
+  }
+  if (listsButton) {
+    listsButton.addEventListener('click', () => showSection('list-container'));
+  }
+  
+  const cleanButtons = document.querySelectorAll('.clean');
+
+  const cleanResults = () => {
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('lucky-container').innerHTML = '';
+    document.getElementById('recomendContainer').innerHTML = '';
+    document.getElementById('meta-list').innerHTML = '';
+    document.getElementById('ordered-list').innerHTML = '';
+   
+  };
+
+  cleanButtons.forEach(button => {
+    button.addEventListener('click', cleanResults);
+  });
+});
+
+
 
 ///BUSCADORES Y FILTRO///
 
@@ -39,9 +150,10 @@ searcher.addEventListener("submit", async function (event) {
       gameDiv.innerHTML = `
         <h2>${game.name}</h2>
         <img src="${game.background_image}" alt="${game.name}">
-        <p>Genre: ${genreNames.join(", ")}</p>
-        <p class="rate">Rating: ${game.rating}</p>
-        <p>Platforms: ${platformNames.join(", ")}</p>
+        <p class="hidden rate">Rating: ${game.rating}</p>
+        <p class="hidden metacritic">Metacritic: ${game.metacritic}</p> 
+        <p class="hidden date"> ${game.released}</p>
+        
       `;
       results.appendChild(gameDiv);
 
@@ -74,7 +186,24 @@ sortFilter.addEventListener('change', function(event) {
           return nameA.localeCompare(nameB);
         });
         break;
+        case 'date':
+          gameCards.sort(function(a, b) {
+            let dateA = a.querySelector('.date').textContent;
+            let dateB = b.querySelector('.date').textContent;       
+            return dateA.localeCompare(dateB);
+          });
+          break;
+          case 'metacritic':
+            gameCards.sort(function(a, b) {
+              let metA = a.querySelector('.metacritic').textContent.match(/[\d]+/)
+              let metB = b.querySelector('.metacritic').textContent.match(/[\d]+/)
 
+              let metacriticA = metA ? parseInt(metA[0]) : 0;
+              let metacriticB = metB ? parseInt(metB[0]) : 0;
+              return metacriticB - metacriticA;
+            });
+            break;
+          
     }
   
 
@@ -84,7 +213,6 @@ sortFilter.addEventListener('change', function(event) {
       document.getElementById('results').appendChild(card);
     });
   });
-
 
 
   async function showGameDetails(gameElement) {
@@ -97,26 +225,40 @@ sortFilter.addEventListener('change', function(event) {
         const gameDetailContainer = document.getElementById('gameDetail');
         const genreNames = gameDetails.genres.map((genre) => genre.name);
         const platformNames = gameDetails.platforms.map((plat) => plat.platform.name);
-        
+        const storeNames = gameDetails.stores.map((store) => `<a href="https://${store.store.domain}">${store.store.name}</a>`).join(" ");
+
+   
         gameDetailContainer.innerHTML = `
             <div class="game-detail">
             <span id="closeDetail" style="cursor: pointer;">&times; Close</span>
                 <h1>${gameDetails.name}</h1>
                 <img src="${gameDetails.background_image}" alt="${gameDetails.name}" />  
-                <p>Genres: ${genreNames}</p>
-                <p>Platforms: ${platformNames}</p>    
-                <p>Metacritic: ${gameDetails.metacritic}</p> 
-                <p>Released: ${gameDetails.released}</p>
-                <p>${gameDetails.description_raw}</p>
-                <p>Genres: ${genreNames}</p>
-                <p>Platforms: ${platformNames}</p>
+                <p id="metacritic">${gameDetails.metacritic}</p>
+                <p class="rate">Rating: ${gameDetails.rating}</p>               
+                <p>${gameDetails.description}</p>
+                <p>${gameDetails.released.split("-").reverse().join("-")}</p>
+                <p class="tags">${genreNames}</p>
+                <p class="tags">${platformNames.join(" ")}</p> 
+                <p class="tags">${storeNames}</p>
+
                 </div>`;
 
-       
-        gameDetailContainer.style.display = 'block';
+                let colorMeta = document.getElementById("metacritic");
+                const metascore = parseInt(gameDetails.metacritic, 10);
+                if (metascore >= 75) {
+                    colorMeta.style.backgroundColor = "green";
+                } else if (metascore >= 50) {
+                    colorMeta.style.backgroundColor = "yellow";
+                    colorMeta.style.color = "black"; 
+                } else {
+                    colorMeta.style.backgroundColor = "red";
+                }
+                colorMeta.style.color = "black";
 
+
+        gameDetailContainer.style.display = 'block';
         document.getElementById('closeDetail').addEventListener('click', function() {
-          document.getElementById('gameDetail').style.display = 'none';
+        document.getElementById('gameDetail').style.display = 'none';
         });
 
     } catch (error) {
@@ -129,15 +271,15 @@ sortFilter.addEventListener('change', function(event) {
 
 ///// ADVANCED SEARCH///
 
-toggleAdvance.addEventListener('click', function(){
+// toggleAdvance.addEventListener('click', function(){
 
 
-  if (document.getElementById('advanceSearch').style.display === 'block') {
-    document.getElementById('advanceSearch').style.display = 'none';
-  } else {
-    document.getElementById('advanceSearch').style.display = 'block';
-  }
-})
+//   if (document.getElementById('advanceSearch').style.display === 'block') {
+//     document.getElementById('advanceSearch').style.display = 'none';
+//   } else {
+//     document.getElementById('advanceSearch').style.display = 'block';
+//   }
+// })
 
 
 
@@ -187,7 +329,7 @@ toggleAdvance.addEventListener('click', function(){
           gameDiv.innerHTML = `
               <img src="${game.background_image}" alt="${game.name}">
               <h2>${game.name}</h2>
-             <p>Genre:${genreNames.join(", ")}</p>
+              <p>Genre:${genreNames.join(", ")}</p>
               <p class="rate">Rating: ${game.rating}</p>
               <p>Plataformas: ${platformNames.join(", ")}</p>
           `;
@@ -265,7 +407,7 @@ toggleAdvance.addEventListener('click', function(){
     }
 
 
-    listMeta.addEventListener("click", displayListMeta);
+  listMeta.addEventListener("click", displayListMeta);
 
 
 
@@ -311,8 +453,7 @@ toggleAdvance.addEventListener('click', function(){
 
     listAnticipated.addEventListener("click", displayListAnticipated);
 
-
-
+    
 
     // gameDiv.addEventListener('click', function() {
       // showGameDetails(this);
@@ -385,3 +526,88 @@ async function submitOptions(event) {
 
 document.addEventListener('DOMContentLoaded', loadOptions);
 document.getElementById('gamesForm').addEventListener('submit', submitOptions);
+
+
+// function toggleSelect() {
+//   const selectContainer = document.getElementById('select-container');
+//   selectContainer.classList.toggle('collapsed');
+//   selectContainer.classList.toggle('expanded');
+// }
+// document.getElementById('toggle-select').addEventListener('click', toggleSelect);
+
+// async function loadPublishersAndDevelopers() {
+//   const publishSelect = document.getElementById('publish-select'); 
+  
+//   try {
+    
+//     const publishersResponse = await fetch('https://api.rawg.io/api/publishers?key=41e09f82e07341ceac29f5fc9cb6f367');
+//     const publishersData = await publishersResponse.json();
+    
+//     const publishersGroup = document.createElement('optgroup');
+//     publishersGroup.label = 'Publishers';
+//     publishersData.results.forEach(publisher => {
+//       publishersGroup.appendChild(new Option(publisher.name, `publisher-${publisher.id}`));
+//     });
+//     publishSelect.appendChild(publishersGroup);
+
+   
+//     const developersResponse = await fetch('https://api.rawg.io/api/developers?key=41e09f82e07341ceac29f5fc9cb6f367');
+//     const developersData = await developersResponse.json();
+  
+//     const developersGroup = document.createElement('optgroup');
+//     developersGroup.label = 'Developers';
+//     developersData.results.forEach(developer => {
+//       developersGroup.appendChild(new Option(developer.name, `developer-${developer.id}`));
+//     });
+//     publishSelect.appendChild(developersGroup);
+    
+//   } catch (error) {
+//     console.error("Error loading publishers and developers:", error);
+//   }
+// }
+
+// document.addEventListener('DOMContentLoaded', loadPublishersAndDevelopers)
+
+// async function fetchGamePublishers (pubId, pubTipo) {
+ 
+//   const parametros = pubTipo === 'publisher' ? 'publishers' : 'developers';
+//   const gamesApi = `https://api.rawg.io/api/games?key=41e09f82e07341ceac29f5fc9cb6f367&${pubTipo}=${pubId}&page_size=5&ordering=-rating`;
+
+//   try {
+//     const response = await fetch(gamesApi);
+//     const data = await response.json();
+//     displayGames(data.results); 
+//   } catch (error) {
+//     console.error("Error fetching games by entity:", error);
+//   }
+// }
+// function displayGames(games) {
+//   const gamesList = document.getElementById('games-list'); // 
+//   gamesList.innerHTML = ''; 
+
+//   games.forEach(game => {
+//     const gameItem = document.createElement('div');
+//     gameItem.className = 'game-item';
+//     gameItem.innerHTML = `
+//       <h3>${game.name}</h3>`
+      
+     
+//     gamesList.appendChild(gameItem);
+//   });
+// }
+// document.getElementById('publish-select').addEventListener('change', (event) => {
+//   const selectedValue = event.target.value;
+//   const [pubTipo, pubId] = selectedValue.split('-');
+
+//   fetchGamePublishers(pubId, pubTipo);
+// });
+{/* <form id="gamesform2">        
+<div id="select-container" class="collapsed">
+    <label for="publish-select">Choose Publishers or Developers:</label>
+    <select id="publish-select">
+    </select>
+  </div>
+  <button id="toggle-select">Show/Hide Options</button>
+<button type="submit" id="publish-button">Go!</button>
+<div id="games-list"></div> */}
+
